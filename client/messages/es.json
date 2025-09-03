@@ -1,0 +1,88 @@
+{
+  "Login": {
+    "title": {
+      "text": "Bienvenido de nuevo",
+      "brand": "Madi",
+      "description": "Ingresa con tu cuenta de google"
+    },
+    "social": {
+      "google": "Ingresa con tu google"
+    },
+    "or": "O ingresa con",
+    "form": {
+      "fields": {
+        "email": {
+          "label": "Correo",
+          "placeholder": "mi-correo@gmail.com",
+          "errors": {
+            "required": "Ingresa un correo valido"
+          }
+        }
+      },
+      "submit": "Continuar",
+      "register": {
+        "text": "No tienes una cuenta ?. ",
+        "link": "Registrate"
+      }
+    }
+  },
+  "Register": {
+    "title": {
+      "text": "Registrate",
+      "description": "Registrate con tu cuenta de google"
+    },
+    "social": {
+      "google": "Registrate con google"
+    },
+    "or": "O registrate con",
+    "form": {
+      "fields": {
+        "email": {
+          "label": "Correo",
+          "placeholder": "mi-correo@gmail.com",
+          "errors": {
+            "required": "Ingresa un correo valido"
+          }
+        }
+      },
+      "submit": "Continuar",
+      "register": {
+        "text": "Ya tienes una cuenta ?. ",
+        "link": " Ingresa"
+      }
+    }
+  },
+  "PasswordView": {
+    "title": "Ingrese su contraseña",
+    "description": "Ingresa la contraseña asociada a tu cuenta .",
+    "field": {
+      "label": "Contraseña",
+      "placeholder": "**********",
+      "errors": {
+        "required": "Este campo es requerido."
+      }
+    },
+    "submit": "Ingresar"
+  },
+  "CreatePassword": {
+    "title": "Configura tu contraseña",
+    "description": "Configura una contraseña con la que ingresaras a la aplicacion",
+    "fields": {
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "***********",
+        "errors": {
+          "required": "Este campo es requerido"
+        }
+      },
+      "confirmPassword": {
+        "label": "Confirma tu contraseña",
+        "placeholder": "***********",
+        "errors": {
+          "not-match": "Las contraseñas no coinciden"
+        }
+      }
+    },
+    "submit": "Registrarse"
+  }
+}
