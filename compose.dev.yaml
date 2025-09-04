@@ -1,8 +1,10 @@
 services:
   api:
     container_name: api-dev
-    command: bun start:dev
+    command: bash -c "bunx prisma generate && bun start:dev"
     env_file: .env.development
+    environment:
+      - PORT=${API_PORT}
     depends_on:
       - db
     build:
@@ -11,20 +13,21 @@ services:
     volumes:
       - "./api/:/app"
     ports:
-      - "8000:8000"
+      - "${API_PORT}:${API_PORT}"
   client:
     container_name: client-dev
     depends_on:
       - api
     command: bun dev
-    env_file: .env.development
+    environment:
+      - PORT=${CLIENT_PORT}
     volumes:
       - "./client/:/app"
     build:
       context: client
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
   db:
     image: postgres
     restart: always

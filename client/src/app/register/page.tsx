@@ -3,7 +3,10 @@ import {
   schema,
   SchemaType,
 } from "@/features/auth/schemas/registerEmail.schema";
+import { validateEmail } from "@/features/auth/services/register/validateEmail";
+import AlertMessage from "@/features/shared/components/alertMessage/AlertMessage";
 import Button from "@/features/shared/components/button/button";
+import FormField from "@/features/shared/components/formfield/FormField";
 import EmailIcon from "@/features/shared/components/icons/EmailIcon";
 import GoogleIcon from "@/features/shared/components/icons/GoogleIcon";
 import LoadingIcon from "@/features/shared/components/icons/LoadingIcon";
@@ -19,6 +22,7 @@ import { useForm } from "react-hook-form";
 const RegisterPage = () => {
   const t = useTranslations("Register");
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -28,16 +32,22 @@ const RegisterPage = () => {
     resolver: zodResolver(schema),
   });
 
-  const error = errors["email"]?.message;
-
   const handleForm = async (data: SchemaType) => {
-    setLoading(true);
-    await sleep(2000);
-    console.log({ data });
-    router.push(
-      `/register/createPassword?email=${encodeURIComponent(data.email)}`,
-    );
-    setLoading(false);
+    try {
+      setLoading(true);
+      await sleep(1000);
+      const { isFree } = await validateEmail(data.email);
+      if (!isFree) {
+        setErrorMessage("Este correo ya esta en uso.");
+        setTimeout(() => setErrorMessage(""), 3000);
+        return;
+      }
+      router.push(
+        `/register/createPassword?email=${encodeURIComponent(data.email)}`,
+      );
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="h-screen w-screen bg-bg-1 lg:bg-bg-2 lg:grid lg:place-items-center">
@@ -63,27 +73,15 @@ const RegisterPage = () => {
           </span>
           <div className="w-full absolute h-[1px] bg-border-2 m-auto" />
         </div>
-        <div className="grid gap-2">
-          <label className={cn("text-sm text-text-1", error && "text-danger")}>
-            {t("form.fields.email.label")}
-          </label>
-          <div
-            className={cn(
-              "flex gap-6 items-center border border-border-1 bg-bg-2 rounded-md px-4 focus-within:ring-2 focus-within:ring-shadow/50 transition-all",
 
-              error && "border-danger focus-within:ring-danger/50",
-            )}
-          >
-            <input
-              type="text"
-              placeholder={t("form.fields.email.placeholder")}
-              className="placeholder:text-text-2 flex-1 text-sm h-9 outline-none"
-              {...register("email")}
-            />
-            <EmailIcon className="w-5 h-5 text-text-2" />
-          </div>
-          {error && <p className="text-sm text-danger">{t(error)}</p>}
-        </div>
+        <FormField
+          placeholder={t("form.fields.email.placeholder")}
+          label={t("form.fields.email.label")}
+          error={errors.email && t(errors.email.message!)}
+          Icon={<EmailIcon className="w-5 h-5 text-text-2" />}
+          {...register("email")}
+        />
+        {errorMessage && <AlertMessage text={errorMessage} />}
         <Button type="submit">
           {loading && (
             <LoadingIcon className="w-5 h-5 text-text-3 animate-spin" />

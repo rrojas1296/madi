@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache openssl bash
 
 RUN npm i -g bun
 
@@ -11,5 +11,3 @@ COPY package.json bun.lock src ./
 RUN bun install
 
 COPY . .
-
-EXPOSE 8000
