@@ -10,12 +10,12 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <div className="w-screen h-screen flex">
-      <Sidebar />
-      <div className="flex-1 overflow-y-auto custom-scroll flex flex-col">
+      <div className="flex-1 overflow-y-auto custom-scroll flex flex-col lg:pl-[68px]">
         <HeaderApp />
-        <div className="px-5 flex-1 grid place-items-center">{children}</div>
+        <div className="px-5 flex-1">{children}</div>
       </div>
       <BottomNav />
+      <Sidebar />
     </div>
   );
 };

@@ -98,7 +98,20 @@
     },
     "submit": "Registrarse"
   },
-  "BottomNav": {
-    "sections": {}
+  "Sidebar": {
+    "brand": "Madi",
+    "sections": {
+      "dashboard": "Panel de control",
+      "apartments": "Departamentos",
+      "tenants": "Inquilinos",
+      "payments": "Pagos",
+      "bookings": "Reservas",
+      "settings": "Configuracion"
+    },
+    "main": "General"
+  },
+  "Header": {
+    "greeting": "Bienvenido ",
+    "brand": "Madi"
   }
 }

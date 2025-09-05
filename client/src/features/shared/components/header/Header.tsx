@@ -8,24 +8,33 @@ import SunIcon from "../icons/SunIcon";
 import BellIcon from "../icons/BellIcon";
 import { useThemeStore } from "@/store/theme.store";
 import MoonIcon from "../icons/MoonIcon";
+import Image from "next/image";
+import { DEFAULT_USER_IMAGE } from "@/constants/defaults";
+import { useLocale, useTranslations } from "next-intl";
+import { getToday } from "../../utils/getToday";
 
 const HeaderApp = () => {
   const router = useRouter();
+  const t = useTranslations("Header");
   const { setTheme, theme } = useThemeStore();
+  const locale = useLocale();
+  const date = getToday(locale as "en" | "es");
 
   const handleSwitchTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
   return (
-    <div className="h-[72px] shrink-0 flex items-center sticky z-10 top-0 left-0 px-5 bg-bg-1 w-full lg:h-20 lg:px-6 lg:border-b lg:border-b-border-2 ">
+    <div className="h-[72px] shrink-0 z-10 flex items-center sticky top-0 left-0 px-5 bg-bg-1 w-full lg:h-20 lg:px-6 lg:border-b lg:border-b-border-2 ">
       <div className="flex flex-1 justify-between items-center">
         <Link href="/dashboard" className="flex items-center gap-3 lg:hidden">
           <BuildingIcon className="h-5 w-5 fill-current text-primary" />
-          <span className="font-semibold text-xl">Madi</span>
+          <span className="font-semibold text-xl">{"brand"}</span>
         </Link>
         <div className="gap-1 hidden lg:grid">
-          <h1 className="font-semibold text-xl">Bienvenido Diego Raul</h1>
-          <p className="text-sm text-text-2">18 de agosto, 2025</p>
+          <h1 className="font-semibold text-xl">
+            {t("greeting")} Diego Raul Rojas
+          </h1>
+          <p className="text-sm text-text-2">{date}</p>
         </div>
         <div className="flex gap-4">
           <Button variant="icon" className="rounded-md bg-bg-2 hover:bg-bg-1">
@@ -37,18 +46,25 @@ const HeaderApp = () => {
             onClick={handleSwitchTheme}
           >
             {theme === "dark" ? (
-              <SunIcon className="w-5 h-5 stroke-current text-text-2" />
-            ) : (
               <MoonIcon className="w-5 h-5 stroke-current text-text-2" />
+            ) : (
+              <SunIcon className="w-5 h-5 stroke-current text-text-2" />
             )}
           </Button>
           <Button
             variant="icon"
-            className="rounded-md bg-bg-2 hover:bg-bg-1"
+            className="rounded-md bg-bg-2 hover:bg-bg-1 lg:hidden"
             onClick={() => router.push("/settings")}
           >
             <SettingsIcon className="w-5 h-5 stroke-current text-text-2" />
           </Button>
+          <Image
+            src={DEFAULT_USER_IMAGE}
+            width={50}
+            height={50}
+            className="w-10 h-10 rounded-full hidden lg:block"
+            alt="User image profile"
+          />
         </div>
       </div>
     </div>

@@ -3,6 +3,10 @@
 @import "./animations.css";
 @import "tw-animate-css";
 
+* {
+  interpolate-size: allow-keywords;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {

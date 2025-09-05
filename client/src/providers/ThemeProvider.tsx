@@ -12,7 +12,7 @@ const ThemeProvider = ({ children }: Props) => {
     const storageTheme = localStorage.getItem(THEME_KEY);
     if (!storageTheme) {
       const systemIsDark = window.matchMedia(
-        "(prefers-color-schema:dark)",
+        "(prefers-color-scheme:dark)",
       ).matches;
       setTheme(systemIsDark ? "dark" : "light");
       return;
