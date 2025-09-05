@@ -1,7 +1,7 @@
 services:
   api:
     container_name: api-dev
-    command: bash -c "bunx prisma generate && bun start:dev"
+    command: bash -c "bun generate && bun start:dev"
     env_file: .env.development
     depends_on:
       - db
