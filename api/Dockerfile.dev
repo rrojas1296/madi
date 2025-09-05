@@ -1,8 +1,10 @@
 FROM node:lts-alpine
 
-RUN apk add --no-cache openssl bash
+RUN apk add --no-cache openssl bash curl unzip
 
-RUN npm i -g bun
+RUN curl -fsSL https://bun.sh/install | bash
+
+ENV PATH="/root/.bun/bin:$PATH"
 
 WORKDIR /app
 

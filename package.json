@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "docker compose --env-file .env.development -f compose.dev.yaml up"
+    "start:dev": "docker compose --env-file .env.development -f compose.dev.yaml up",
+    "install:all": "bun install --cwd ./api && bun install --cwd ./client"
   },
   "keywords": [],
   "author": "",
