@@ -3,8 +3,6 @@ services:
     container_name: api-dev
     command: bash -c "bunx prisma generate && bun start:dev"
     env_file: .env.development
-    environment:
-      - PORT=${API_PORT}
     depends_on:
       - db
     build:
@@ -19,6 +17,7 @@ services:
     depends_on:
       - api
     command: bun dev
+    env_file: .env.development
     environment:
       - PORT=${CLIENT_PORT}
     volumes:
@@ -30,7 +29,6 @@ services:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
   db:
     image: postgres
-    restart: always
     container_name: db-dev 
     environment:
       - POSTGRES_USER=${DB_USER}

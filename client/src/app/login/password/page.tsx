@@ -1,5 +1,9 @@
 "use client";
-import { schema } from "@/features/auth/schemas/enterPassword.schema";
+import {
+  schema,
+  SchemaType,
+} from "@/features/auth/schemas/enterPassword.schema";
+import { loginUser } from "@/features/auth/services/login/loginUser";
 import AlertMessage from "@/features/shared/components/alertMessage/AlertMessage";
 import Button from "@/features/shared/components/button/button";
 import FormField from "@/features/shared/components/formfield/FormField";
@@ -13,10 +17,12 @@ import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+let timeout: NodeJS.Timeout;
+
 const Page = () => {
-  const t = useTranslations("PasswordView");
+  const t = useTranslations("EnterPassword");
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const params = useSearchParams();
   const router = useRouter();
@@ -29,9 +35,19 @@ const Page = () => {
     resolver: zodResolver(schema),
   });
 
-  const handleLogin = () => {
-    setLoading(true);
-    console.log({ email });
+  const handleLogin = async (data: SchemaType) => {
+    try {
+      clearTimeout(timeout);
+      setLoading(true);
+      await loginUser({ email, password: data.password });
+      router.push("/dashboard");
+    } catch (err: any) {
+      const code = err.response.data.message || "server_error";
+      setErrorMessage(t(`errors.${code}`));
+      timeout = setTimeout(() => setErrorMessage(null), 3000);
+    } finally {
+      setLoading(false);
+    }
   };
   if (!email) return redirect("/login");
   return (
@@ -63,6 +79,7 @@ const Page = () => {
         <FormField
           label={t("field.label")}
           placeholder={t("field.placeholder")}
+          autoFocus
           type={showPassword ? "text" : "password"}
           error={errors.password && t(errors.password.message!)}
           Icon={

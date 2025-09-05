@@ -1,5 +1,6 @@
 "use client";
-import { schema } from "@/features/auth/schemas/createPassword";
+import { schema, SchemaType } from "@/features/auth/schemas/createPassword";
+import { createUser } from "@/features/auth/services/register/createUser";
 import Button from "@/features/shared/components/button/button";
 import FormField from "@/features/shared/components/formfield/FormField";
 import ArrowLeftIcon from "@/features/shared/components/icons/ArrowLeftIcon";
@@ -27,9 +28,19 @@ const Page = () => {
     resolver: zodResolver(schema),
   });
 
-  const handleLogin = () => {
-    setLoading(true);
-    console.log({ email });
+  const handleLogin = async (data: SchemaType) => {
+    try {
+      setLoading(true);
+      await createUser({
+        email,
+        password: data.password,
+      });
+      router.push("/dashboard");
+    } catch (err) {
+      console.error({ err });
+    } finally {
+      setLoading(false);
+    }
   };
   if (!email) return redirect("/login");
   return (
@@ -62,6 +73,7 @@ const Page = () => {
           label={t("fields.password.label")}
           placeholder={t("fields.password.placeholder")}
           type={showPassword ? "text" : "password"}
+          autoFocus
           error={errors.password && t(errors.password.message!)}
           Icon={
             <button

@@ -8,17 +8,18 @@ import { schema, SchemaType } from "@/features/auth/schemas/loginEmail.schema";
 import { useState } from "react";
 import LoadingIcon from "@/features/shared/components/icons/LoadingIcon";
 import Link from "next/link";
-import { sleep } from "@/features/shared/lib/sleep";
 import { useTranslations } from "next-intl";
 import FormField from "@/features/shared/components/formfield/FormField";
 import { useRouter } from "next/navigation";
-import AlertIcon from "@/features/shared/components/icons/AlertIcon";
 import AlertMessage from "@/features/shared/components/alertMessage/AlertMessage";
+import { validateEmail } from "@/features/auth/services/login/validateEmail";
+
+let timeout: NodeJS.Timeout;
 
 const LoginPage = () => {
   const t = useTranslations("Login");
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -32,11 +33,18 @@ const LoginPage = () => {
   const error = errors["email"]?.message;
 
   const handleForm = async (data: SchemaType) => {
-    setLoading(true);
-    await sleep(2000);
-    console.log({ data });
-    router.push(`/login/password?email=${encodeURIComponent(data.email)}`);
-    setLoading(false);
+    clearTimeout(timeout);
+    try {
+      setLoading(true);
+      await validateEmail(data.email);
+      router.push(`/login/password?email=${encodeURIComponent(data.email)}`);
+    } catch (err: any) {
+      const code = err.response.data.message || "server_error";
+      setErrorMessage(t(`form.errors.${code}`));
+      timeout = setTimeout(() => setErrorMessage(null), 3000);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="h-screen w-screen bg-bg-1 lg:bg-bg-2 lg:grid lg:place-items-center overflow-hidden">

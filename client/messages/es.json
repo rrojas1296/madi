@@ -19,6 +19,11 @@
           }
         }
       },
+      "errors": {
+        "email_not_found": "El correo no se encontra registrado",
+        "incorrect_password": "La contraseña es incorrecta",
+        "server_error": "El servidor no responde"
+      },
       "submit": "Continuar",
       "register": {
         "text": "No tienes una cuenta ?. ",
@@ -49,10 +54,14 @@
       "register": {
         "text": "Ya tienes una cuenta ?. ",
         "link": " Ingresa"
+      },
+      "errors": {
+        "email_in_use": "El correo ya esta registrado",
+        "server_error": "El servidor no responde"
       }
     }
   },
-  "PasswordView": {
+  "EnterPassword": {
     "title": "Ingrese su contraseña",
     "description": "Ingresa la contraseña asociada a tu cuenta .",
     "field": {
@@ -61,6 +70,10 @@
       "errors": {
         "required": "Este campo es requerido."
       }
+    },
+    "errors": {
+      "incorrect_password": "La contraseña es incorrecta",
+      "server_error": "El servidor no responde"
     },
     "submit": "Ingresar"
   },
@@ -84,5 +97,8 @@
       }
     },
     "submit": "Registrarse"
+  },
+  "BottomNav": {
+    "sections": {}
   }
 }

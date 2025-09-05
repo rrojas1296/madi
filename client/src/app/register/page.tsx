@@ -10,8 +10,6 @@ import FormField from "@/features/shared/components/formfield/FormField";
 import EmailIcon from "@/features/shared/components/icons/EmailIcon";
 import GoogleIcon from "@/features/shared/components/icons/GoogleIcon";
 import LoadingIcon from "@/features/shared/components/icons/LoadingIcon";
-import { cn } from "@/features/shared/lib/shadcn";
-import { sleep } from "@/features/shared/lib/sleep";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -19,10 +17,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+let timeout: NodeJS.Timeout;
+
 const RegisterPage = () => {
   const t = useTranslations("Register");
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<null | string>("");
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -34,17 +34,16 @@ const RegisterPage = () => {
 
   const handleForm = async (data: SchemaType) => {
     try {
+      clearTimeout(timeout);
       setLoading(true);
-      await sleep(1000);
-      const { isFree } = await validateEmail(data.email);
-      if (!isFree) {
-        setErrorMessage("Este correo ya esta en uso.");
-        setTimeout(() => setErrorMessage(""), 3000);
-        return;
-      }
+      await validateEmail(data.email);
       router.push(
         `/register/createPassword?email=${encodeURIComponent(data.email)}`,
       );
+    } catch (err: any) {
+      const code = err.response.data.message || "server_error";
+      setErrorMessage(t(`form.errors.${code}`));
+      timeout = setTimeout(() => setErrorMessage(null), 3000);
     } finally {
       setLoading(false);
     }
@@ -82,7 +81,7 @@ const RegisterPage = () => {
           {...register("email")}
         />
         {errorMessage && <AlertMessage text={errorMessage} />}
-        <Button type="submit">
+        <Button disabled={loading} type="submit">
           {loading && (
             <LoadingIcon className="w-5 h-5 text-text-3 animate-spin" />
           )}
